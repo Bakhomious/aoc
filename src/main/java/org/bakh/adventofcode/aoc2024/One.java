@@ -10,7 +10,7 @@ import java.util.stream.IntStream;
 /**
  * <a href="https://adventofcode.com/2024/day/1">Day 1: Historian Hysteria</a>
  */
-public class One extends Day<Integer> {
+public class One extends Day {
 
     protected One() {
         super("2024/day1.input");

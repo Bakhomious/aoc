@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 @Getter
-public abstract class Day<T> {
+public abstract class Day {
 
     private final Stream<String> data;
 
