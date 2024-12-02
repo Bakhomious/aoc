@@ -1,8 +1,9 @@
 package org.bakh.adventofcode.aoc2024;
 
-import org.bakh.Day;
+import org.bakh.adventofcode.Day;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -12,41 +13,44 @@ import java.util.stream.IntStream;
  */
 public class One extends Day {
 
-    protected One() {
-        super("2024/day1.input");
+    private static final List<Integer> LEFT_LIST = new ArrayList<>();
+    private static final List<Integer> RIGHT_LIST = new ArrayList<>();
+
+    protected One(String fileName) {
+        super(fileName);
     }
 
     @Override
-    public void solve() {
-        final var leftList = new ArrayList<Integer>();
-        final var rightList = new ArrayList<Integer>();
-
+    protected String runPartOne() {
         getData()
             .map(x -> x.split(" +"))
             .forEach(x -> {
-                leftList.add(Integer.parseInt(x[0]));
-                rightList.add(Integer.parseInt(x[1]));
+                LEFT_LIST.add(Integer.parseInt(x[0]));
+                RIGHT_LIST.add(Integer.parseInt(x[1]));
             });
 
-        leftList.sort(Integer::compareTo);
-        rightList.sort(Integer::compareTo);
+        LEFT_LIST.sort(Integer::compareTo);
+        RIGHT_LIST.sort(Integer::compareTo);
 
         // Fallback in case of mismatching
-        if (leftList.size() != rightList.size()) {
+        if (LEFT_LIST.size() != RIGHT_LIST.size()) {
             throw new RuntimeException("Lists have to be the same size and equal to the initial input size");
         }
 
-        final var partOneSolution = IntStream.range(0, leftList.size())
-            .map(i -> Math.abs(leftList.get(i) - rightList.get(i)))
+        final var partOneSolution = IntStream.range(0, LEFT_LIST.size())
+            .map(i -> Math.abs(LEFT_LIST.get(i) - RIGHT_LIST.get(i)))
             .sum();
 
-        System.out.println("Part one solution: " + partOneSolution);
+        return String.valueOf(partOneSolution);
+    }
 
-        final var countMap = leftList.stream()
+    @Override
+    protected String runPartTwo() {
+        final var countMap = LEFT_LIST.stream()
             .collect(
                 Collectors.toMap(
                     Function.identity(),
-                    n -> rightList.stream().filter(x -> x.equals(n)).count()
+                    n -> RIGHT_LIST.stream().filter(x -> x.equals(n)).count()
                 )
             );
 
@@ -54,11 +58,11 @@ public class One extends Day {
             .mapToLong(entry -> entry.getKey() * entry.getValue())
             .sum();
 
-        System.out.println("Part two solution: " + partTwoSolution);
+        return String.valueOf(partTwoSolution);
     }
 
     public static void main(String[] args) {
-        final var one = new One();
-        one.solve();
+        new One("2024/day1.input");
     }
+
 }

@@ -1,6 +1,6 @@
 package org.bakh.adventofcode.aoc2024;
 
-import org.bakh.Day;
+import org.bakh.adventofcode.Day;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,15 +12,16 @@ import java.util.stream.Stream;
  */
 public class Two extends Day {
 
+    private List<List<Integer>> reports;
     private static final Integer ALLOWED_DIFFERENCE = 3;
 
-    protected Two() {
-        super("2024/day2.input");
+    protected Two(String fileName) {
+        super(fileName);
     }
 
     @Override
-    public void solve() {
-        final var reports = getData()
+    protected String runPartOne() {
+        this.reports = getData()
             .map(
                 line -> Stream.of(line.split(" "))
                     .map(Integer::parseInt)
@@ -32,13 +33,16 @@ public class Two extends Day {
             .filter(this::isSafe)
             .count();
 
-        System.out.println("Part one solution: " + safeReports);
+        return String.valueOf(safeReports);
+    }
 
+    @Override
+    protected String runPartTwo() {
         final var dampenedReports = reports.stream()
             .filter(this::canBeSafeWithDampener)
             .count();
 
-        System.out.println("Part two solution: " + dampenedReports);
+        return String.valueOf(dampenedReports);
     }
 
     private boolean isSafe(List<Integer> report) {
@@ -76,9 +80,6 @@ public class Two extends Day {
     }
 
     public static void main(String[] args) {
-        final var two = new Two();
-        two.solve();
-//        two.getData().forEach(System.out::println);
+        new Two("2024/day2.input");
     }
-
 }

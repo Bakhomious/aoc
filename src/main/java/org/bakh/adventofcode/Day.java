@@ -1,4 +1,4 @@
-package org.bakh;
+package org.bakh.adventofcode;
 
 import lombok.Getter;
 
@@ -16,7 +16,16 @@ public abstract class Day {
 
     protected Day(String fileName) {
         this.data = load(fileName);
+
+        final var partOne = runPartOne();
+        System.out.println("Part 1: " + partOne);
+
+        final var partTwo = runPartTwo();
+        System.out.println("Part 2: " + partTwo);
     }
+
+    protected abstract String runPartOne();
+    protected abstract String runPartTwo();
 
     private Stream<String> load(String fileName) {
         try {
@@ -26,7 +35,5 @@ public abstract class Day {
             throw new RuntimeException(e);
         }
     }
-
-    public abstract void solve();
 
 }
