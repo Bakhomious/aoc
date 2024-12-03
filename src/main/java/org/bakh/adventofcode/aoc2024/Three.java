@@ -32,14 +32,14 @@ public class Three extends Day {
 
     @Override
     protected String runPartTwo() {
+        // Have to be one string, otherwise the answer would be invalid
         final var dataStream = String.join("", getData());
-        // First we split on `do()`
-        // Then we split them on the first `don't()` occurrence, ignore the second part (index 1) as it's deactivated
-        final var conditionalResults = Arrays.stream(dataStream.split("do\\(\\)"))
-            .map(part -> part.split("don't\\(\\)", 2)[0])
-            .flatMap(this::processPatternMatcher)
+
+        final var conditionalResults = Stream.of(dataStream)
+            .flatMap(this::processConditionalPatternMatcher)
             .mapToInt(Integer::intValue)
             .sum();
+
         return String.valueOf(conditionalResults);
     }
 
@@ -48,6 +48,14 @@ public class Three extends Day {
         return Stream.generate(() -> matcher.find() ? matcher : null)
             .takeWhile(Objects::nonNull)
             .map(this::parseResult);
+    }
+
+    private Stream<Integer> processConditionalPatternMatcher(final String data) {
+        final var matcher = Pattern.compile("(^|do\\(\\)).+?(don't\\(\\)|$)").matcher(data);
+
+        return Stream.generate(() -> matcher.find() ? matcher.group() : null)
+            .takeWhile(Objects::nonNull)
+            .flatMap(this::processPatternMatcher);
     }
 
     private Integer parseResult(final Matcher matcher) {
