@@ -21,7 +21,7 @@ public class Two extends Day {
 
     @Override
     protected String runPartOne() {
-        this.reports = getData()
+        this.reports = getData().stream()
             .map(
                 line -> Stream.of(line.split(" "))
                     .map(Integer::parseInt)

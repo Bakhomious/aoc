@@ -22,7 +22,7 @@ public class One extends Day {
 
     @Override
     protected String runPartOne() {
-        getData()
+        getData().stream()
             .map(x -> x.split(" +"))
             .forEach(x -> {
                 LEFT_LIST.add(Integer.parseInt(x[0]));
