@@ -11,46 +11,50 @@ import java.util.stream.IntStream;
 /**
  * <a href="https://adventofcode.com/2024/day/1">Day 1: Historian Hysteria</a>
  */
-public class One extends Day {
+public class Day01 extends Day {
 
-    private static final List<Integer> LEFT_LIST = new ArrayList<>();
-    private static final List<Integer> RIGHT_LIST = new ArrayList<>();
+    private List<Integer> leftList;
+    private List<Integer> rightList;
 
-    protected One(String fileName) {
+    public Day01(String fileName) {
         super(fileName);
     }
 
     @Override
-    protected String runPartOne() {
+    public String runPartOne() {
+        this.leftList = new ArrayList<>();
+        this.rightList = new ArrayList<>();
+
         getData().stream()
             .map(x -> x.split(" +"))
             .forEach(x -> {
-                LEFT_LIST.add(Integer.parseInt(x[0]));
-                RIGHT_LIST.add(Integer.parseInt(x[1]));
+                leftList.add(Integer.parseInt(x[0]));
+                rightList.add(Integer.parseInt(x[1]));
             });
 
-        LEFT_LIST.sort(Integer::compareTo);
-        RIGHT_LIST.sort(Integer::compareTo);
+        leftList.sort(Integer::compareTo);
+        rightList.sort(Integer::compareTo);
 
         // Fallback in case of mismatching
-        if (LEFT_LIST.size() != RIGHT_LIST.size()) {
+        if (leftList.size() != rightList.size()) {
             throw new RuntimeException("Lists have to be the same size and equal to the initial input size");
         }
 
-        final var partOneSolution = IntStream.range(0, LEFT_LIST.size())
-            .map(i -> Math.abs(LEFT_LIST.get(i) - RIGHT_LIST.get(i)))
+        final var partOneSolution = IntStream.range(0, leftList.size())
+            .map(i -> Math.abs(leftList.get(i) - rightList.get(i)))
             .sum();
 
         return String.valueOf(partOneSolution);
     }
 
     @Override
-    protected String runPartTwo() {
-        final var countMap = LEFT_LIST.stream()
+    public String runPartTwo() {
+        final var countMap = leftList.stream()
             .collect(
                 Collectors.toMap(
                     Function.identity(),
-                    n -> RIGHT_LIST.stream().filter(x -> x.equals(n)).count()
+                    n -> rightList.stream().filter(x -> x.equals(n)).count(),
+                    Long::sum
                 )
             );
 
@@ -62,7 +66,7 @@ public class One extends Day {
     }
 
     public static void main(String[] args) {
-        new One("2024/day1.input");
+        new Day01("2024/day01.input");
     }
 
 }

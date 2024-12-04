@@ -1,6 +1,7 @@
 package org.bakh.adventofcode;
 
 import lombok.Getter;
+import org.pmw.tinylog.Logger;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -14,7 +15,7 @@ public abstract class Day {
 
     private final List<String> data;
 
-    protected Day(String fileName) {
+    public Day(String fileName) {
         this.data = load(fileName);
 
         final var partOne = runPartOne();
@@ -24,15 +25,18 @@ public abstract class Day {
         System.out.println("Part 2: " + partTwo);
     }
 
-    protected abstract String runPartOne();
-    protected abstract String runPartTwo();
+    public abstract String runPartOne();
+    public abstract String runPartTwo();
 
     private List<String> load(String fileName) {
         try {
             final var filePath = Objects.requireNonNull(getClass().getClassLoader().getResource(fileName)).toURI();
-            return Files.lines(Paths.get(filePath)).toList();
+            try (var lines = Files.lines(Paths.get(filePath))) {
+                return lines.toList();
+            }
         } catch (IOException | URISyntaxException e) {
-            throw new RuntimeException(e);
+            Logger.error("Could not load file: " + fileName);
+            throw new RuntimeException();
         }
     }
 

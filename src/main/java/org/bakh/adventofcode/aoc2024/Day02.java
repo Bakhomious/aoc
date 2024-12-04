@@ -10,17 +10,17 @@ import java.util.stream.Stream;
 /**
  * <a href="https://adventofcode.com/2024/day/2">Day 2: Red-Nosed Reports</a>
  */
-public class Two extends Day {
+public class Day02 extends Day {
 
     private List<List<Integer>> reports;
     private static final Integer ALLOWED_DIFFERENCE = 3;
 
-    protected Two(String fileName) {
+    public Day02(String fileName) {
         super(fileName);
     }
 
     @Override
-    protected String runPartOne() {
+    public String runPartOne() {
         this.reports = getData().stream()
             .map(
                 line -> Stream.of(line.split(" "))
@@ -37,7 +37,7 @@ public class Two extends Day {
     }
 
     @Override
-    protected String runPartTwo() {
+    public String runPartTwo() {
         final var dampenedReports = reports.stream()
             .filter(this::canBeSafeWithDampener)
             .count();
@@ -80,6 +80,6 @@ public class Two extends Day {
     }
 
     public static void main(String[] args) {
-        new Two("2024/day2.input");
+        new Day02("2024/day02.input");
     }
 }

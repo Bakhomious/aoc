@@ -2,7 +2,6 @@ package org.bakh.adventofcode.aoc2024;
 
 import org.bakh.adventofcode.Day;
 
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,17 +10,17 @@ import java.util.stream.Stream;
 /**
  * <a href="https://adventofcode.com/2024/day/3">Day 3: Mull It Over</a>
  */
-public class Three extends Day {
+public class Day03 extends Day {
 
     private static final String MUL_EXPR = "mul\\((\\d{1,3}),(\\d{1,3})\\)";
     private static final Pattern MUL_PATTERN = Pattern.compile(MUL_EXPR);
 
-    protected Three(String fileName) {
+    public Day03(String fileName) {
         super(fileName);
     }
 
     @Override
-    protected String runPartOne() {
+    public String runPartOne() {
         final var instructionResults = getData().stream()
             .flatMap(this::processPatternMatcher)
             .mapToInt(Integer::intValue)
@@ -31,7 +30,7 @@ public class Three extends Day {
     }
 
     @Override
-    protected String runPartTwo() {
+    public String runPartTwo() {
         // Have to be one string, otherwise the answer would be invalid
         final var dataStream = String.join("", getData());
 
@@ -65,6 +64,6 @@ public class Three extends Day {
     }
 
     public static void main(String[] args) {
-        new Three("2024/day3.input");
+        new Day03("2024/day03.input");
     }
 }

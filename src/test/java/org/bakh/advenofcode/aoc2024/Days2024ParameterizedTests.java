@@ -1,0 +1,43 @@
+package org.bakh.advenofcode.aoc2024;
+
+import org.bakh.adventofcode.Day;
+import org.bakh.adventofcode.aoc2024.Day01;
+import org.bakh.adventofcode.aoc2024.Day02;
+import org.bakh.adventofcode.aoc2024.Day03;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.pmw.tinylog.Logger;
+
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public class Days2024ParameterizedTests {
+
+    @ParameterizedTest
+    @MethodSource("testDataProvider")
+    void testDays(
+        Class<? extends Day> dayClass,
+        String fileName,
+        String expectedPart1,
+        String expectedPart2
+    ) {
+        try {
+            final var day = dayClass.getDeclaredConstructor(String.class).newInstance(fileName);
+            assertEquals(expectedPart1, day.runPartOne());
+            assertEquals(expectedPart2, day.runPartTwo());
+        } catch (Exception e) {
+            Logger.error("Cannot find suitable constructor for class {} \n {}", dayClass, e);
+        }
+    }
+
+    static Stream<Arguments> testDataProvider() {
+        return Stream.of(
+            Arguments.of(Day01.class, "2024/day01.input", "11", "31"),
+            Arguments.of(Day02.class, "2024/day02.input", "2", "4"),
+            Arguments.of(Day03.class, "2024/day03.input", "161", "48")
+        );
+    }
+
+}
