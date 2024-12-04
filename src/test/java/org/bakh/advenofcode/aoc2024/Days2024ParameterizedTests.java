@@ -5,10 +5,11 @@ import org.bakh.adventofcode.aoc2024.Day01;
 import org.bakh.adventofcode.aoc2024.Day02;
 import org.bakh.adventofcode.aoc2024.Day03;
 import org.bakh.adventofcode.aoc2024.Day04;
+import org.bakh.adventofcode.aoc2024.Day05;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.pmw.tinylog.Logger;
+import org.tinylog.Logger;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.stream.Stream;
@@ -45,7 +46,8 @@ public class Days2024ParameterizedTests {
             Arguments.of(Day01.class, "2024/day01.input", "11", "31"),
             Arguments.of(Day02.class, "2024/day02.input", "2", "4"),
             Arguments.of(Day03.class, "2024/day03.input", "161", "48"),
-            Arguments.of(Day04.class, "2024/day04.input", "18", "9")
+            Arguments.of(Day04.class, "2024/day04.input", "18", "9"),
+            Arguments.of(Day05.class, "2024/day05.input", "143", "")
         );
     }
 

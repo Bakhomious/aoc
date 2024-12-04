@@ -1,7 +1,7 @@
 package org.bakh.adventofcode;
 
 import lombok.Getter;
-import org.pmw.tinylog.Logger;
+import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
