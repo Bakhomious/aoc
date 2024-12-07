@@ -47,7 +47,7 @@ public class Days2024ParameterizedTests {
             Arguments.of(Day02.class, "2024/day02.input", "2", "4"),
             Arguments.of(Day03.class, "2024/day03.input", "161", "48"),
             Arguments.of(Day04.class, "2024/day04.input", "18", "9"),
-            Arguments.of(Day05.class, "2024/day05.input", "143", "")
+            Arguments.of(Day05.class, "2024/day05.input", "143", "123")
         );
     }
 
