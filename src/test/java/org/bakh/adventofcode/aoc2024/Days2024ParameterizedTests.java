@@ -1,4 +1,4 @@
-package org.bakh.advenofcode.aoc2024;
+package org.bakh.adventofcode.aoc2024;
 
 import org.bakh.adventofcode.Day;
 import org.bakh.adventofcode.aoc2024.Day01;
@@ -21,17 +21,17 @@ public class Days2024ParameterizedTests {
     @ParameterizedTest
     @MethodSource("testDataProvider")
     void testDays(
-        Class<? extends Day> dayClass,
-        String fileName,
-        String expectedPart1,
-        String expectedPart2
+        final Class<? extends Day> dayClass,
+        final String fileName,
+        final String expectedPart1,
+        final String expectedPart2
     ) {
         try {
             final var day = dayClass.getDeclaredConstructor(String.class).newInstance(fileName);
             assertEquals(expectedPart1, day.runPartOne());
             assertEquals(expectedPart2, day.runPartTwo());
         } catch (
-            NoSuchMethodException
+            final NoSuchMethodException
             | InvocationTargetException
             | InstantiationException
             | IllegalAccessException e
