@@ -58,12 +58,15 @@ public class Day02 extends Day {
     public String runPartTwo() {
         final var result = getData()
             .stream().flatMapToLong(Day02::rangeSplit)
-            .filter(this::isSequenceRepeatedAtLeastTwice)
+            .filter(this::isSequenceRepeatedAtLeastTwiceOptimized)
             .sum();
 
         return String.valueOf(result);
     }
 
+    /**
+     * Brute force solution. Very slow. Roughly O(n^2).
+     */
     private Boolean isSequenceRepeatedAtLeastTwice(final Long number) {
         final var strNumber = String.valueOf(number);
         final var length = strNumber.length();
@@ -84,6 +87,15 @@ public class Day02 extends Day {
         }
 
         return false;
+    }
+
+    /**
+     * String doubling. Scans for the original string after doubling.
+     * If it's less than the original length, returns true.
+     */
+    private Boolean isSequenceRepeatedAtLeastTwiceOptimized(final Long number) {
+        final var s = String.valueOf(number);
+        return (s + s).indexOf(s, 1) < s.length();
     }
 
 }
