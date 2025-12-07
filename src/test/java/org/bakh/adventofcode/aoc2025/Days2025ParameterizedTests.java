@@ -19,7 +19,10 @@ class Days2025ParameterizedTests {
         return Stream.of(
             Arguments.of(Day01.class, "2025/day01.input", "3", "6"),
             Arguments.of(Day02.class, "2025/day02.input", "1227775554", "4174379265"),
-            Arguments.of(Day03.class, "2025/day03.input", "357", "3121910778619")
+            Arguments.of(Day03.class, "2025/day03.input", "357", "3121910778619"),
+            Arguments.of(Day04.class, "2025/day04.input", "13", "43"),
+            Arguments.of(Day05.class, "2025/day05.input", "3", "14"),
+            Arguments.of(Day06.class, "2025/day06.input", "4277556", "3263827")
         );
     }
 
