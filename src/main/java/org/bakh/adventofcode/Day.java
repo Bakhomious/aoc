@@ -42,11 +42,15 @@ public abstract class Day<T> {
     }
 
     public void printParts() {
+        final var startOne = System.nanoTime();
         final var partOne = runPartOne();
-        Logger.info("Part 1: " + partOne);
+        final var endOne = System.nanoTime();
+        Logger.info("Part 1: {} (took {}ms)", partOne, (endOne - startOne) / 1_000_000.0);
 
+        final var startTwo = System.nanoTime();
         final var partTwo = runPartTwo();
-        Logger.info("Part 2: " + partTwo);
+        final var endTwo = System.nanoTime();
+        Logger.info("Part 2: {} (took {}ms)", partTwo, (endTwo - startTwo) / 1_000_000.0);
     }
 
     public abstract String runPartOne();

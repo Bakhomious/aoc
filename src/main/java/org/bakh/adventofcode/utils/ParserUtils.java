@@ -1,6 +1,7 @@
 package org.bakh.adventofcode.utils;
 
 import org.bakh.adventofcode.utils.data.Grid;
+import org.bakh.adventofcode.utils.data.Point;
 
 import lombok.experimental.UtilityClass;
 
@@ -40,6 +41,14 @@ public class ParserUtils {
                 .collect(Collectors.toCollection(ArrayList::new));
 
             return new Grid(data);
+        }
+    };
+
+    public static final Parser<List<Point>> POINTS = uri -> {
+        try (final var lines = Files.lines(Paths.get(uri))) {
+            return lines.map(s -> s.split(","))
+                .map(Point::new)
+                .toList();
         }
     };
 
