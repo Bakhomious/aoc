@@ -1,6 +1,7 @@
 package org.bakh.adventofcode.aoc2025;
 
 import org.bakh.adventofcode.Day;
+import org.bakh.adventofcode.utils.data.Grid;
 import org.bakh.adventofcode.utils.operations.Operator;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.stream.IntStream;
 import static org.bakh.adventofcode.utils.ParserUtils.SPATIAL_MATRIX;
 
 
-public class Day06 extends Day<List<List<Character>>> {
+public class Day06 extends Day<Grid> {
 
     public Day06(final String filename) {
         super(filename, SPATIAL_MATRIX);
@@ -20,10 +21,10 @@ public class Day06 extends Day<List<List<Character>>> {
 
     @Override
     public String runPartOne() {
-        final var operatorRow = getData().getLast();
+        final var operatorRow = getData().data().getLast();
         final var operators = parseOperators(operatorRow);
 
-        final var gridRows = getData().subList(0, getData().size() - 1);
+        final var gridRows = getData().data().subList(0, getData().height() - 1);
         final var numCols = operators.size();
 
         final var sum = IntStream.range(0, numCols)
@@ -43,11 +44,8 @@ public class Day06 extends Day<List<List<Character>>> {
      */
     @Override
     public String runPartTwo() {
-        final var grid = getData();
-        final var width = grid.stream()
-            .mapToInt(List::size)
-            .max()
-            .orElse(0);
+        final var grid = getData().data();
+        final var width = getData().width();
 
         final List<Long> results = new ArrayList<>();
         final List<Integer> currentBlockCols = new ArrayList<>();
@@ -71,7 +69,7 @@ public class Day06 extends Day<List<List<Character>>> {
         return String.valueOf(results.stream().mapToLong(Long::longValue).sum());
     }
 
-    private boolean isColumnEmpty(final List<List<Character>> grid, final Integer col) {
+    private boolean isColumnEmpty(final List<? extends List<Character>> grid, final Integer col) {
         for (var row = 0; row < grid.size() - 1; row++) {
             if (getChar(grid, row, col) != ' ') {
                 return false;
@@ -80,7 +78,7 @@ public class Day06 extends Day<List<List<Character>>> {
         return true;
     }
 
-    private long solveBlock(final List<List<Character>> grid, final List<Integer> cols) {
+    private long solveBlock(final List<? extends List<Character>> grid, final List<Integer> cols) {
         final var operatorRowIdx = grid.size() - 1;
 
         final var op = cols.stream()
@@ -111,7 +109,7 @@ public class Day06 extends Day<List<List<Character>>> {
         return op.apply(numbers);
     }
 
-    private char getChar(final List<List<Character>> grid, final int r, final int c) {
+    private char getChar(final List<? extends List<Character>> grid, final int r, final int c) {
         if (r < 0 || r >= grid.size()) {
             return ' ';
         }
@@ -131,7 +129,9 @@ public class Day06 extends Day<List<List<Character>>> {
             .toList();
     }
 
-    private List<Long> getNumbersInColumn(final List<List<Character>> grid, final int colIndex) {
+    private List<Long> getNumbersInColumn(
+        final List<? extends List<Character>> grid, final int colIndex
+    ) {
         return grid.stream()
             // Rejoin to trim whitespaces
             .map(
@@ -146,5 +146,8 @@ public class Day06 extends Day<List<List<Character>>> {
             .toList();
     }
 
+    static void main() {
+        new Day06("2025/day06.input").printParts();
+    }
 
 }

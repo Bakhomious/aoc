@@ -2,6 +2,7 @@ package org.bakh.adventofcode.aoc2025;
 
 import org.bakh.adventofcode.Day;
 import org.bakh.adventofcode.utils.ParserUtils;
+import org.bakh.adventofcode.utils.data.Grid;
 import org.bakh.adventofcode.utils.data.Point;
 
 import java.util.LinkedList;
@@ -11,7 +12,7 @@ import java.util.List;
 /**
  * <a href="https://adventofcode.com/2025/day/3">Day 4: Printing Department</a>
  */
-public class Day04 extends Day<List<List<Character>>> {
+public class Day04 extends Day<Grid> {
 
     private static final List<Point> directions = List.of(
         new Point(1, 0), // right
@@ -23,8 +24,6 @@ public class Day04 extends Day<List<List<Character>>> {
         new Point(1, -1), // up-right
         new Point(-1, -1) // up-left
     );
-    private int width;
-    private int height;
 
     public Day04(final String filename) {
         super(filename, ParserUtils.SPATIAL_MATRIX);
@@ -36,21 +35,38 @@ public class Day04 extends Day<List<List<Character>>> {
 
     @Override
     public String runPartOne() {
-        loadGrid();
         final var toForkLift = getRolls();
         return String.valueOf(toForkLift.size());
     }
 
-    private void loadGrid() {
-        width = getData().getFirst().size();
-        height = getData().size();
+    @Override
+    public String runPartTwo() {
+        var totalRemoved = 0;
+        var removedInPass = Integer.MIN_VALUE;
+
+        while (removedInPass != 0) {
+            removedInPass = removeRolls();
+            totalRemoved += removedInPass;
+        }
+
+        return String.valueOf(totalRemoved);
+    }
+
+    private Integer removeRolls() {
+        final var rollsToRemove = getRolls();
+
+        for (final var point : rollsToRemove) {
+            getData().data().get(point.y()).set(point.x(), '.');
+        }
+
+        return rollsToRemove.size();
     }
 
     private List<Point> getRolls() {
         final var list = new LinkedList<Point>();
-        for (var row = 0; row < height; row++) {
-            for (var col = 0; col < width; col++) {
-                if (getData().get(row).get(col) == '@' && canBeLifted(col, row)) {
+        for (var row = 0; row < getData().height(); row++) {
+            for (var col = 0; col < getData().width(); col++) {
+                if (getData().data().get(row).get(col) == '@' && canBeLifted(col, row)) {
                     list.add(new Point(col, row));
                 }
             }
@@ -64,44 +80,13 @@ public class Day04 extends Day<List<List<Character>>> {
             final var checkCol = col + direction.x();
             final var checkRow = row + direction.y();
 
-            if (checkCol >= 0 && checkCol < width && checkRow >= 0 && checkRow < height) {
-                if (getData().get(checkRow).get(checkCol) == '@') {
+            if (checkCol >= 0 && checkCol < getData().width() && checkRow >= 0 && checkRow < getData().height()) {
+                if (getData().data().get(checkRow).get(checkCol) == '@') {
                     adjacentRolls++;
                 }
             }
         }
         return adjacentRolls < 4;
-    }
-
-    @Override
-    public String runPartTwo() {
-        loadGrid();
-        var totalRemoved = 0;
-        var removedInPass = Integer.MIN_VALUE;
-
-        while (removedInPass != 0) {
-            removedInPass = removeRolls();
-            totalRemoved += removedInPass;
-        }
-
-        return String.valueOf(totalRemoved);
-    }
-
-    private Integer removeRolls() {
-        final var rollsToRemove = new LinkedList<Point>();
-        for (var row = 0; row < height; row++) {
-            for (var col = 0; col < width; col++) {
-                if (getData().get(row).get(col) == '@' && canBeLifted(col, row)) {
-                    rollsToRemove.add(new Point(col, row));
-                }
-            }
-        }
-
-        for (final var point : rollsToRemove) {
-            getData().get(point.y()).set(point.x(), '.');
-        }
-
-        return rollsToRemove.size();
     }
 
 }

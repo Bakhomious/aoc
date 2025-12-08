@@ -1,5 +1,7 @@
 package org.bakh.adventofcode.utils;
 
+import org.bakh.adventofcode.utils.data.Grid;
+
 import lombok.experimental.UtilityClass;
 
 import java.nio.file.Files;
@@ -28,14 +30,16 @@ public class ParserUtils {
         }
     };
 
-    public static final Parser<List<List<Character>>> SPATIAL_MATRIX = uri -> {
+    public static final Parser<Grid> SPATIAL_MATRIX = uri -> {
         try (final var lines = Files.lines(Paths.get(uri))) {
-            return lines.map(
+            final var data = lines.map(
                     row -> row.chars()
                         .mapToObj(c -> (char) c)
                         .collect(Collectors.toCollection(ArrayList::new))
                 )
                 .collect(Collectors.toCollection(ArrayList::new));
+
+            return new Grid(data);
         }
     };
 
