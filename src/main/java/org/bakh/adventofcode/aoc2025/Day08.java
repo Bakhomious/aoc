@@ -15,6 +15,9 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 
+/**
+ * <a href="https://adventofcode.com/2025/day/8">Day 8: Playground</a>
+ */
 public class Day08 extends Day<List<Point>> {
 
     private final Integer limit;

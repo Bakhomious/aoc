@@ -12,7 +12,9 @@ import java.util.stream.IntStream;
 
 import static org.bakh.adventofcode.utils.ParserUtils.SPATIAL_MATRIX;
 
-
+/**
+ * <a href="https://adventofcode.com/2025/day/6">Day 6: Trash Compactor</a>
+ */
 public class Day06 extends Day<Grid> {
 
     public Day06(final String filename) {

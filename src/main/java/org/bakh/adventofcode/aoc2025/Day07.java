@@ -6,7 +6,9 @@ import org.bakh.adventofcode.utils.data.Grid;
 
 import java.util.Arrays;
 
-
+/**
+ * <a href="https://adventofcode.com/2025/day/7">Day 7: Laboratories</a>
+ */
 public class Day07 extends Day<Grid> {
 
     public Day07(final String fileName) {
