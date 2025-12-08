@@ -4,19 +4,20 @@ import org.bakh.adventofcode.Day;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.List;
 
 
 /**
  * <a href="https://adventofcode.com/2025/day/3">Day 3: Lobby</a>
  */
-public class Day03 extends Day {
+public class Day03 extends Day<List<String>> {
 
     public Day03(final String filename) {
         super(filename);
     }
 
     static void main() {
-        new Day03("2025/day03.input");
+        new Day03("2025/day03.input").printParts();
     }
 
     @Override

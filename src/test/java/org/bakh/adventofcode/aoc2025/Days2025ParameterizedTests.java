@@ -26,8 +26,9 @@ class Days2025ParameterizedTests {
         );
     }
 
-    @ParameterizedTest
+    @SuppressWarnings("rawtypes")
     @MethodSource("testDataProvider")
+    @ParameterizedTest
     void testDays(
         final Class<? extends Day> dayClass,
         final String fileName,

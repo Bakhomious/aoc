@@ -1,22 +1,24 @@
 package org.bakh.adventofcode.aoc2025;
 
 import org.bakh.adventofcode.Day;
+import org.bakh.adventofcode.utils.ParserUtils;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.LongStream;
 
 
 /**
  * <a href="https://adventofcode.com/2025/day/2">Day 2: Gift Shop</a>
  */
-public class Day02 extends Day {
+public class Day02 extends Day<List<String>> {
 
     public Day02(final String filename) {
-        super(filename, Type.CSV);
+        super(filename, ParserUtils.CSV);
     }
 
     static void main() {
-        new Day02("2025/day02.input");
+        new Day02("2025/day02.input").printParts();
     }
 
     @Override
@@ -65,8 +67,18 @@ public class Day02 extends Day {
     }
 
     /**
+     * String doubling. Scans for the original string after doubling.
+     * If it's less than the original length, returns true.
+     */
+    private Boolean isSequenceRepeatedAtLeastTwiceOptimized(final Long number) {
+        final var s = String.valueOf(number);
+        return (s + s).indexOf(s, 1) < s.length();
+    }
+
+    /**
      * Brute force solution. Very slow. Roughly O(n^2).
      */
+    @SuppressWarnings("unused")
     private Boolean isSequenceRepeatedAtLeastTwice(final Long number) {
         final var strNumber = String.valueOf(number);
         final var length = strNumber.length();
@@ -87,15 +99,6 @@ public class Day02 extends Day {
         }
 
         return false;
-    }
-
-    /**
-     * String doubling. Scans for the original string after doubling.
-     * If it's less than the original length, returns true.
-     */
-    private Boolean isSequenceRepeatedAtLeastTwiceOptimized(final Long number) {
-        final var s = String.valueOf(number);
-        return (s + s).indexOf(s, 1) < s.length();
     }
 
 }

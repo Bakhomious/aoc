@@ -1,95 +1,62 @@
 package org.bakh.adventofcode.aoc2025;
 
 import org.bakh.adventofcode.Day;
+import org.bakh.adventofcode.utils.operations.Operator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static org.bakh.adventofcode.utils.ParserUtils.SPATIAL_MATRIX;
 
-/**
- * <a href="https://adventofcode.com/2025/day/5">Day 6: Trash Compactor</a>
- */
-public class Day06 extends Day {
 
-    private List<List<Long>> worksheet;
-    private List<String> operators;
+public class Day06 extends Day<List<List<Character>>> {
 
     public Day06(final String filename) {
-        super(filename);
-    }
-
-    static void main() {
-        new Day06("2025/day06.input");
+        super(filename, SPATIAL_MATRIX);
     }
 
     @Override
     public String runPartOne() {
-        loadGrid();
-        final var results = new ArrayList<Long>();
+        final var operatorRow = getData().getLast();
+        final var operators = parseOperators(operatorRow);
+
+        final var gridRows = getData().subList(0, getData().size() - 1);
         final var numCols = operators.size();
-        for (var c = 0; c < numCols; c++) {
-            final var op = operators.get(c);
-            final var data = worksheet.get(c);
 
-            var result = 0L;
-            switch (op) {
-                case "*" -> result = data.stream().reduce(1L, (a, b) -> a * b);
-                case "+" -> result = data.stream().mapToLong(Long::longValue).sum();
-                default -> throw new IllegalStateException("Unknown operator " + op);
-            }
-
-            results.add(result);
-        }
-
-        final var sum = results.stream()
-            .mapToLong(Long::longValue)
+        final var sum = IntStream.range(0, numCols)
+            .mapToLong(
+                i -> {
+                    final var numbers = getNumbersInColumn(gridRows, i);
+                    return operators.get(i).apply(numbers);
+                }
+            )
             .sum();
 
         return String.valueOf(sum);
     }
 
-    private void loadGrid() {
-        operators = Arrays.stream(getData().getLast().trim().split("\\s+"))
-            .filter(s -> !s.isEmpty())
-            .toList();
-        final var worksheetData = getData().subList(0, getData().size() - 1)
-            .stream()
-            .map(String::trim)
-            .map(s -> s.split("\\s+"))
-            .map(
-                row -> Arrays.stream(row)
-                    .map(Long::parseLong)
-                    .toList()
-            )
-            .toList();
-
-        final var numColumns = worksheetData.getFirst().size();
-
-        // Transform into columnar data
-        worksheet = IntStream.range(0, numColumns)
-            .mapToObj(
-                col -> worksheetData.stream()
-                    .map(row -> row.get(col))
-                    .toList()
-            )
-            .toList();
-    }
-
+    /**
+     * Spatial Matrix in this case matters (White spaces are important)
+     */
     @Override
     public String runPartTwo() {
-        final var paddedSheet = getGridWithPadding();
-        final var height = paddedSheet.length;
-        final var width = paddedSheet[0].length;
+        final var grid = getData();
+        final var width = grid.stream()
+            .mapToInt(List::size)
+            .max()
+            .orElse(0);
 
-        final var results = new ArrayList<Long>();
-        final var currentBlockCols = new ArrayList<Integer>();
+        final List<Long> results = new ArrayList<>();
+        final List<Integer> currentBlockCols = new ArrayList<>();
 
         for (var col = 0; col < width; col++) {
-            if (isSeparatorColumns(paddedSheet, col, height)) {
+            if (isColumnEmpty(grid, col)) {
+                // Similar to the idea of: Keep scanning until you hit a wall
                 if (!currentBlockCols.isEmpty()) {
-                    results.add(solveBlock(paddedSheet, currentBlockCols));
+                    results.add(solveBlock(grid, currentBlockCols));
                     currentBlockCols.clear();
                 }
             } else {
@@ -98,78 +65,86 @@ public class Day06 extends Day {
         }
 
         if (!currentBlockCols.isEmpty()) {
-            results.add(solveBlock(paddedSheet, currentBlockCols));
+            results.add(solveBlock(grid, currentBlockCols));
         }
 
         return String.valueOf(results.stream().mapToLong(Long::longValue).sum());
     }
 
-    private Long solveBlock(final char[][] grid, final List<Integer> cols) {
-        final var height = grid.length;
-        final var operatorRow = height - 1;
-
-        String op = null;
-        for (final var c : cols) {
-            final var ch = grid[operatorRow][c];
-            if (ch == '*' || ch == '+') {
-                op = String.valueOf(ch);
-                break;
-            }
-        }
-
-        final var numbers = new ArrayList<Long>();
-        for (var i = cols.size() - 1; i >= 0; i--) {
-            final var c = cols.get(i);
-            final var sb = new StringBuilder();
-
-            for (var r = 0; r < operatorRow; r++) {
-                final var ch = grid[r][c];
-                if (Character.isDigit(ch)) {
-                    sb.append(ch);
-                }
-            }
-
-            if (!sb.isEmpty()) {
-                numbers.add(Long.parseLong(sb.toString()));
-            }
-        }
-
-        assert op != null;
-
-        return switch (op) {
-            case "*" -> numbers.stream().reduce(1L, (a, b) -> a * b);
-            case "+" -> numbers.stream().mapToLong(Long::longValue).sum();
-            default -> throw new IllegalStateException("Unknown operator " + op);
-        };
-
-    }
-
-    private char[][] getGridWithPadding() {
-        final var lines = getData();
-        final var height = lines.size();
-        final var width = lines.stream().mapToInt(String::length).max().orElseThrow();
-
-        final var grid = new char[height][width];
-        for (var row = 0; row < height; row++) {
-            final var line = lines.get(row);
-            for (var col = 0; col < width; col++) {
-                if (col < line.length()) {
-                    grid[row][col] = line.charAt(col);
-                } else {
-                    grid[row][col] = ' ';
-                }
-            }
-        }
-        return grid;
-    }
-
-    private boolean isSeparatorColumns(final char[][] grid, final int col, final int height) {
-        for (var row = 0; row < height - 1; row++) {
-            if (grid[row][col] != ' ') {
+    private boolean isColumnEmpty(final List<List<Character>> grid, final Integer col) {
+        for (var row = 0; row < grid.size() - 1; row++) {
+            if (getChar(grid, row, col) != ' ') {
                 return false;
             }
         }
         return true;
     }
+
+    private long solveBlock(final List<List<Character>> grid, final List<Integer> cols) {
+        final var operatorRowIdx = grid.size() - 1;
+
+        final var op = cols.stream()
+            .map(c -> getChar(grid, operatorRowIdx, c))
+            .map(String::valueOf)
+            .filter(Operator::isSymbol)
+            .map(Operator::from)
+            .findFirst()
+            .orElseThrow(() -> new IllegalStateException("Block missing operator"));
+
+        // Cephalopod is written right-to-left in columns
+        final List<Long> numbers = new ArrayList<>();
+        for (var i = cols.size() - 1; i >= 0; i--) {
+            final int col = cols.get(i);
+            final var sb = new StringBuilder();
+
+            for (var row = 0; row < operatorRowIdx; row++) {
+                final var c = getChar(grid, row, col);
+                if (Character.isDigit(c)) {
+                    sb.append(c);
+                }
+            }
+            if (!sb.isEmpty()) {
+                numbers.add(Long.parseLong(sb.toString()));
+            }
+        }
+
+        return op.apply(numbers);
+    }
+
+    private char getChar(final List<List<Character>> grid, final int r, final int c) {
+        if (r < 0 || r >= grid.size()) {
+            return ' ';
+        }
+
+        final var row = grid.get(r);
+        if (c < 0 || c >= row.size()) {
+            return ' ';
+        }
+
+        return row.get(c);
+    }
+
+    private List<Operator> parseOperators(final List<Character> row) {
+        final var line = row.stream().map(String::valueOf).collect(Collectors.joining());
+        return Arrays.stream(line.trim().split("\\s+"))
+            .map(Operator::from)
+            .toList();
+    }
+
+    private List<Long> getNumbersInColumn(final List<List<Character>> grid, final int colIndex) {
+        return grid.stream()
+            // Rejoin to trim whitespaces
+            .map(
+                chars -> chars.stream()
+                    .map(String::valueOf)
+                    .collect(Collectors.joining())
+            )
+            .map(String::trim)
+            .map(line -> line.split("\\s+"))
+            .map(tokens -> tokens[colIndex])
+            .map(Long::parseLong)
+            .toList();
+    }
+
 
 }

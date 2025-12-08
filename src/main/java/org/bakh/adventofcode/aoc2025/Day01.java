@@ -2,18 +2,20 @@ package org.bakh.adventofcode.aoc2025;
 
 import org.bakh.adventofcode.Day;
 
+import java.util.List;
+
 
 /**
  * <a href="https://adventofcode.com/2025/day/1">Day 1: Secret Entrance</a>
  */
-public class Day01 extends Day {
+public class Day01 extends Day<List<String>> {
 
     public Day01(final String fileName) {
         super(fileName);
     }
 
-    static void main(final String[] args) {
-        new Day01("2025/day01.input");
+    static void main() {
+        new Day01("2025/day01.input").printParts();
     }
 
     @Override

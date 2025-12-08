@@ -1,7 +1,7 @@
 package org.bakh.adventofcode.aoc2025;
 
 import org.bakh.adventofcode.Day;
-import org.bakh.adventofcode.utils.Range;
+import org.bakh.adventofcode.utils.data.Range;
 
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 /**
  * <a href="https://adventofcode.com/2025/day/5">Day 5: Cafeteria</a>
  */
-public class Day05 extends Day {
+public class Day05 extends Day<List<String>> {
 
     private List<String> ranges;
     private Set<Long> ids;
@@ -23,7 +23,7 @@ public class Day05 extends Day {
     }
 
     static void main() {
-        new Day05("2025/day05.input");
+        new Day05("2025/day05.input").printParts();
     }
 
     @Override

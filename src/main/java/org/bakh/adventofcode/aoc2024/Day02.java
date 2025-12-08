@@ -7,16 +7,21 @@ import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+
 /**
  * <a href="https://adventofcode.com/2024/day/2">Day 2: Red-Nosed Reports</a>
  */
-public class Day02 extends Day {
+public class Day02 extends Day<List<String>> {
 
-    private List<List<Integer>> reports;
     private static final Integer ALLOWED_DIFFERENCE = 3;
+    private List<List<Integer>> reports;
 
-    public Day02(String fileName) {
+    public Day02(final String fileName) {
         super(fileName);
+    }
+
+    static void main() {
+        new Day02("2024/day02.input").printParts();
     }
 
     @Override
@@ -45,12 +50,7 @@ public class Day02 extends Day {
         return String.valueOf(dampenedReports);
     }
 
-    private boolean isSafe(List<Integer> report) {
-        return (isIncreasing(report) || isDecreasing(report))
-            && differenceInRange(report);
-    }
-
-    private boolean canBeSafeWithDampener(List<Integer> report) {
+    private boolean canBeSafeWithDampener(final List<Integer> report) {
         return isSafe(report)
             ? isSafe(report)
             : IntStream.range(0, report.size())
@@ -58,28 +58,30 @@ public class Day02 extends Day {
                 .anyMatch(this::isSafe);
     }
 
-    private boolean isIncreasing(List<Integer> report) {
-        return IntStream.range(0, report.size() - 1)
-            .allMatch(i -> report.get(i) < report.get(i + 1));
-    }
-
-    private boolean isDecreasing(List<Integer> report) {
-        return IntStream.range(0, report.size() - 1)
-            .allMatch(i -> report.get(i) > report.get(i + 1));
-    }
-
-    private boolean differenceInRange(List<Integer> report) {
-        return IntStream.range(0, report.size() - 1)
-            .allMatch(i -> Math.abs(report.get(i) - report.get(i + 1)) <= ALLOWED_DIFFERENCE);
-    }
-
-    private List<Integer> removeElement(List<Integer> report, int index) {
+    private List<Integer> removeElement(final List<Integer> report, final int index) {
         final var newList = new ArrayList<>(report);
         newList.remove(index);
         return newList;
     }
 
-    public static void main(String[] args) {
-        new Day02("2024/day02.input");
+    private boolean isSafe(final List<Integer> report) {
+        return (isIncreasing(report) || isDecreasing(report))
+            && differenceInRange(report);
     }
+
+    private boolean isIncreasing(final List<Integer> report) {
+        return IntStream.range(0, report.size() - 1)
+            .allMatch(i -> report.get(i) < report.get(i + 1));
+    }
+
+    private boolean isDecreasing(final List<Integer> report) {
+        return IntStream.range(0, report.size() - 1)
+            .allMatch(i -> report.get(i) > report.get(i + 1));
+    }
+
+    private boolean differenceInRange(final List<Integer> report) {
+        return IntStream.range(0, report.size() - 1)
+            .allMatch(i -> Math.abs(report.get(i) - report.get(i + 1)) <= ALLOWED_DIFFERENCE);
+    }
+
 }

@@ -1,5 +1,6 @@
 package org.bakh.adventofcode;
 
+import org.bakh.adventofcode.utils.Parser;
 import org.tinylog.Logger;
 
 import lombok.Getter;
@@ -7,79 +8,49 @@ import lombok.Getter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
 import java.util.Objects;
-import java.util.regex.Pattern;
+
+import static org.bakh.adventofcode.utils.ParserUtils.LINES;
 
 
 @Getter
-public abstract class Day {
+public abstract class Day<T> {
 
-    private final List<String> data;
-    private final Type type;
+    private final T data;
+    private URI filePath;
 
-    public Day(final String filename) {
-        this(filename, Type.LINES);
+    public Day(final String fileName) {
+        //noinspection unchecked
+        this(fileName, (Parser<T>) LINES);
     }
 
-    public Day(final String fileName, final Type type) {
-        this.type = type;
-        this.data = load(fileName, type);
-
-        final var partOne = runPartOne();
-        System.out.println("Part 1: " + partOne);
-
-        final var partTwo = runPartTwo();
-        System.out.println("Part 2: " + partTwo);
+    public Day(final String fileName, final Parser<T> parser) {
+        this.data = load(fileName, parser);
     }
 
-    private List<String> load(final String fileName, final Type type) {
+    private T load(final String fileName, final Parser<T> parser) {
         try {
-            final var filePath = Objects.requireNonNull(
+            filePath = Objects.requireNonNull(
                 getClass().getClassLoader().getResource(fileName)
             ).toURI();
 
-            return switch (type) {
-                case LINES -> getDataLines(filePath);
-                case CSV -> getDataCsv(filePath);
-            };
-
-        } catch (final URISyntaxException e) {
+            return parser.parse(filePath);
+        } catch (final URISyntaxException | IOException | NullPointerException e) {
             Logger.error("Could not load file: " + fileName);
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         }
+    }
+
+    public void printParts() {
+        final var partOne = runPartOne();
+        Logger.info("Part 1: " + partOne);
+
+        final var partTwo = runPartTwo();
+        Logger.info("Part 2: " + partTwo);
     }
 
     public abstract String runPartOne();
 
     public abstract String runPartTwo();
-
-    private static List<String> getDataLines(final URI filePath) {
-        try (final var lines = Files.lines(Paths.get(filePath))) {
-            return lines.toList();
-        } catch (final IOException e) {
-            Logger.error("Could not load file: " + filePath);
-            throw new RuntimeException();
-        }
-    }
-
-    private static List<String> getDataCsv(final URI filePath) {
-        try (final var lines = Files.lines(Paths.get(filePath))) {
-            return Pattern.compile(",")
-                .splitAsStream(lines.findFirst().orElseThrow())
-                .map(String::trim)
-                .toList();
-        } catch (final IOException e) {
-            Logger.error("Could not load file: " + filePath);
-            throw new RuntimeException();
-        }
-    }
-
-    public enum Type {
-        LINES,
-        CSV
-    }
 
 }

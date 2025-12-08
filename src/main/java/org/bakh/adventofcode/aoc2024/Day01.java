@@ -8,16 +8,21 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+
 /**
  * <a href="https://adventofcode.com/2024/day/1">Day 1: Historian Hysteria</a>
  */
-public class Day01 extends Day {
+public class Day01 extends Day<List<String>> {
 
     private List<Integer> leftList;
     private List<Integer> rightList;
 
-    public Day01(String fileName) {
+    public Day01(final String fileName) {
         super(fileName);
+    }
+
+    static void main() {
+        new Day01("2024/day01.input").printParts();
     }
 
     @Override
@@ -63,10 +68,6 @@ public class Day01 extends Day {
             .sum();
 
         return String.valueOf(partTwoSolution);
-    }
-
-    public static void main(String[] args) {
-        new Day01("2024/day01.input");
     }
 
 }

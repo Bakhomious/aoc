@@ -9,16 +9,21 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+
 /**
- * a href="https://adventofcode.com/2024/day/6">Day 6: Guard Gallivant</a>
+ * <a href="https://adventofcode.com/2024/day/5">Day 5: Print Queue</a>
  */
-public class Day05 extends Day {
+public class Day05 extends Day<List<String>> {
 
     private static final String PAGES_SEPARATOR = "\\|";
     private static final String DATA_SEPARATOR = "";
 
-    public Day05(String fileName) {
+    public Day05(final String fileName) {
         super(fileName);
+    }
+
+    static void main() {
+        new Day05("2024/day05.input").printParts();
     }
 
     @Override
@@ -47,10 +52,29 @@ public class Day05 extends Day {
         return String.valueOf(updatedOrderSum);
     }
 
+    private static List<Integer> orderUpdate(
+        final Map<Integer, Set<Integer>> rules,
+        final List<Integer> update
+    ) {
+        final var fixed = new int[update.size()];
+        for (final int page : update) {
+            var fixedIndex = 0;
+            for (final var entry : rules.entrySet()) {
+                if (entry.getValue().contains(page) && update.contains(entry.getKey())) {
+                    fixedIndex++;
+                }
+            }
+            fixed[fixedIndex] = page;
+        }
+        return Arrays.stream(fixed)
+            .boxed()
+            .toList();
+    }
+
     private Map<Integer, Set<Integer>> parseRules() {
         final var separator = getData().indexOf(DATA_SEPARATOR);
 
-        final var rules = getData().subList(0, separator).stream()
+        return getData().subList(0, separator).stream()
             .map(page -> page.split(PAGES_SEPARATOR))
             .collect(
                 Collectors.toMap(
@@ -66,35 +90,31 @@ public class Day05 extends Day {
                     }
                 )
             );
-
-        return rules;
     }
 
     private List<List<Integer>> parseUpdates() {
         final var separator = getData().indexOf(DATA_SEPARATOR) + 1;
         final var rules = getData().subList(separator, getData().size());
 
-        final var updates = rules.stream()
+        return rules.stream()
             .map(
                 update -> Arrays.stream(update.split(","))
                     .map(Integer::parseInt)
                     .collect(Collectors.toList())
             )
             .toList();
-
-        return updates;
     }
 
     private static boolean isValid(
-        Map<Integer, Set<Integer>> rules,
-        List<Integer> update
+        final Map<Integer, Set<Integer>> rules,
+        final List<Integer> update
     ) {
-        for (int i = 0; i < update.size(); i++) {
-            var key = update.get(i);
+        for (var i = 0; i < update.size(); i++) {
+            final var key = update.get(i);
             if (!rules.containsKey(key)) {
                 return i == update.size() - 1;
             }
-            for (int page : update.subList(i + 1, update.size())) {
+            for (final int page : update.subList(i + 1, update.size())) {
                 if (!rules.get(key).contains(page)) {
                     return false;
                 }
@@ -103,26 +123,4 @@ public class Day05 extends Day {
         return true;
     }
 
-    private static List<Integer> orderUpdate(
-        Map<Integer, Set<Integer>> rules,
-        List<Integer> update
-    ) {
-        final var fixed = new int[update.size()];
-        for (int page : update) {
-            int fixedIndex = 0;
-            for (var entry : rules.entrySet()) {
-                if (entry.getValue().contains(page) && update.contains(entry.getKey())) {
-                    fixedIndex++;
-                }
-            }
-            fixed[fixedIndex] = page;
-        }
-        return Arrays.stream(fixed)
-            .boxed()
-            .toList();
-    }
-
-    public static void main(String[] args) {
-        new Day05("2024/day05.input");
-    }
 }
