@@ -91,6 +91,13 @@ def generate_java_content(day_num, title, input_type):
         type_str = "List<Point>"
         constructor_super = "super(fileName, ParserUtils.POINTS);"
 
+    elif input_type == 4: # Set<Point>
+        imports.append("java.util.Set")
+        imports.append("org.bakh.adventofcode.utils.data.Point")
+        imports.append("org.bakh.adventofcode.utils.ParserUtils")
+        type_str = "Set<Point>"
+        constructor_super = "super(fileName, ParserUtils.POINTS_SET);"
+
     # Construct import block
     import_block = ""
     for imp in imports:
@@ -215,12 +222,15 @@ def main():
     print("[1] List<String> (default)")
     print("[2] Grid")
     print("[3] List<Point>")
+    print("[4] Set<Point>")
 
     choice = input("Choice [1]: ").strip()
     if choice == "2":
         type_choice = 2
     elif choice == "3":
         type_choice = 3
+    elif choice == "4":
+        type_choice = 4
     else:
         type_choice = 1
 

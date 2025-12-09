@@ -30,4 +30,13 @@ public record Point(
         return (dx * dx) + (dy * dy) + (dz * dz);
     }
 
+    public Long area(final Point b) {
+        if (this.z() != 0 && b.z() != 0) {
+            throw new UnsupportedOperationException("Cannot perform area on 3D objects");
+        }
+        final var length = (long) Math.abs(this.x() - b.x()) + 1;
+        final var width = (long) Math.abs(this.y() - b.y()) + 1;
+        return length * width;
+    }
+
 }

@@ -25,7 +25,8 @@ class Days2025ParameterizedTests {
             Arguments.of(Day06.class, "2025/day06.input", "4277556", "3263827"),
             Arguments.of(Day07.class, "2025/day07.input", "21", "40"),
             Arguments.of(Day08.class, "2025/day08.input", "40", "25272"),
-            Arguments.of(Day08Alt.class, "2025/day08.input", "40", "25272")
+            Arguments.of(Day08Alt.class, "2025/day08.input", "40", "25272"),
+            Arguments.of(Day09.class, "2025/day09.input", "50", "24")
         );
     }
 

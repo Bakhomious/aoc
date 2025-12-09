@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -47,8 +48,26 @@ public class ParserUtils {
     public static final Parser<List<Point>> POINTS = uri -> {
         try (final var lines = Files.lines(Paths.get(uri))) {
             return lines.map(s -> s.split(","))
-                .map(Point::new)
+                .map(
+                    p -> {
+                        if (p.length != 3) {
+                            final var x = Integer.parseInt(p[0]);
+                            final var y = Integer.parseInt(p[1]);
+                            return new Point(x, y);
+                        } else {
+                            return new Point(p);
+                        }
+                    }
+                )
                 .toList();
+        }
+    };
+
+    public static final Parser<Set<Point>> POINTS_SET = uri -> {
+        try (final var lines = Files.lines(Paths.get(uri))) {
+            return lines.map(s -> s.split(","))
+                .map(Point::new)
+                .collect(Collectors.toSet());
         }
     };
 
