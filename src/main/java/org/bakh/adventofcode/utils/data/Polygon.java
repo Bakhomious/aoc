@@ -1,7 +1,5 @@
 package org.bakh.adventofcode.utils.data;
 
-import org.bakh.adventofcode.utils.operations.Operations;
-
 import java.util.List;
 
 
@@ -29,7 +27,10 @@ public record Polygon(
             final var pj = vertices.get(j);
 
             // min(yi, yj) < y <= max(yi,yj)
-            final var withinYRange = Operations.xor((pi.y() > y), (pj.y() > y));
+            final double minY = Math.min(pi.y(), pj.y());
+            final double maxY = Math.max(pi.y(), pj.y());
+            final var withinYRange = (y > minY) && (y <= maxY);
+
             if (withinYRange) {
 
                 // xint = xi + (y - yi) * (xj - xi) / (yj - yi)
