@@ -150,7 +150,7 @@ def update_parameterized_tests(day_num):
         print(f"Test entry for Day {day_num} already exists.")
         return
 
-    new_entry = f'            Arguments.of({day_class_ref}, "{YEAR}/day{day_num:02d}.input", "", "")'
+    new_entry = f'            Arguments.of(Named.of("Day {day_num:02d}", {day_class_ref}), "{YEAR}/day{day_num:02d}.input", "", "")'
 
     pattern = r'(Arguments\.of\(.*?\))(\s*)\);'
 
