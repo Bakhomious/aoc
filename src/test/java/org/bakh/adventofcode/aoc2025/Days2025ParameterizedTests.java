@@ -30,7 +30,8 @@ class Days2025ParameterizedTests {
             Arguments.of(Named.of("Day 9", Day09.class), "2025/day09.input", "50", "24"),
             Arguments.of(Named.of("Day 10", Day10.class), "2025/day10.input", "7", "33"),
             Arguments.of(Named.of("Day 11 Part 1", Day11.class), "2025/day11.input", "5", null),
-            Arguments.of(Named.of("Day 11 Part 2", Day11.class), "2025/day11_2.input", null, "2")
+            Arguments.of(Named.of("Day 11 Part 2", Day11.class), "2025/day11_2.input", null, "2"),
+            Arguments.of(Named.of("Day 12", Day12.class), "2025/day12.input", "2", "No Part Two. Merry Christmas!")
         );
     }
 
